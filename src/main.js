@@ -4,6 +4,9 @@ import * as VueGoogleMaps from "vue2-google-maps"
 
 Vue.config.productionTip = false
 
+import router from './router'
+import store from './store'
+
 Vue.use(VueGoogleMaps, {
   load: {
     key: process.env.VUE_APP_GOOGLE_MAPS_API_KEY,
@@ -11,8 +14,8 @@ Vue.use(VueGoogleMaps, {
   }
 });
 
-console.log(process.env.VUE_APP_GOOGLE_MAPS_API_KEY)
-
 new Vue({ 
   render: h => h(App),
+  store,
+  router
 }).$mount('#app')

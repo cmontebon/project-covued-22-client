@@ -1,20 +1,12 @@
 <template>
   <div>
-    <Home/>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import Home from './components/Home'
-
 export default {
   name: 'App',
-  components: {
-    Home
-  },
-  mounted(){
-    console.log(process.env.VUE_APP_SECRET)
-  }
 }
 </script>
 
