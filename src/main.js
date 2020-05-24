@@ -4,8 +4,8 @@ import * as VueGoogleMaps from "vue2-google-maps"
 
 Vue.config.productionTip = false
 
-import router from './router'
-import store from './store'
+import router from './routes'
+import store from './store/store'
 
 Vue.use(VueGoogleMaps, {
   load: {
