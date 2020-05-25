@@ -13,7 +13,7 @@ const getters = {
 
 const mutations = {
     'SET_CASES': (state, payload) => {
-        state.cases = payload.data
+        state.cases = payload
     },
     'ADD_CASE': (state, payload) => {
         state.cases.push(payload)
@@ -22,20 +22,15 @@ const mutations = {
         const _case = state.cases.find(element => element.id == payload.data.id)
         state.cases.splice(state.cases.indexOf(_case), 1)
     },
-    'UPDATE_CASE': (state, payload) => {
-        state.cases = state.cases.map(_case => {
-            if (_case.id === payload.data.id) {
-                return Object.assign({}, _case, payload.data)
-            }
-            return _case
-        })
-    }
 }
 
 const actions = {
     fetchCases: ({commit}) => {
         axios.get('/cases')
-            .then(res => commit('SET_CASES', res.data))
+            .then(res => {
+                const {data} = res.data
+                commit('SET_CASES', data)
+            })
             .catch(err => console.log(err))
     },
     addCase({commit, rootGetters}, payload){
@@ -53,9 +48,21 @@ const actions = {
             .then(res => commit('DELETE_CASE', res.data))
             .catch(err => console.log(err))
     },
-    updateCase: ({commit}, payload) => {
+    updateCase: ({commit, state, rootGetters}, payload) => {
         axiosAuth.put(`/cases/${payload.id}`, payload)
-            .then(res => commit('UPDATE_CASE', res.data))
+            .then(res => {
+                const {data} = res.data
+                data.barangay = rootGetters.barangays.find(b => b.id === data.brgy_id)
+
+                const cases = state.cases.map(_case => {
+                    if (_case.id === data.id) {
+                        _case = data
+                    }
+                    return _case
+                })
+
+                commit('SET_CASES', cases)
+            })
             .catch(err => console.log(err))
     }
 }
