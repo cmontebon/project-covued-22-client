@@ -1,4 +1,5 @@
 import axios from 'axios'
+import axiosAuth from '@/axios-auth'
 
 const state = {
     cases: []
@@ -39,7 +40,7 @@ const actions = {
             .catch(err => console.log(err))
     },
     addCase({commit, rootGetters}, payload){
-        axios.post('/cases', payload)
+        axiosAuth.post('/cases', payload)
             .then(res => {
                 const { data } = res.data
                 data.barangay = rootGetters.barangays.find(b => b.id === data.brgy_id)
@@ -49,12 +50,12 @@ const actions = {
             .catch(err => console.log(err))
     },
     deleteCase: ({commit}, id) => {
-        axios.delete(`/cases/${id}`)
+        axiosAuth.delete(`/cases/${id}`)
             .then(res => commit('DELETE_CASE', res.data))
             .catch(err => console.log(err))
     },
     updateCase: ({commit}, payload) => {
-        axios.put(`/cases/${payload.id}`, payload)
+        axiosAuth.put(`/cases/${payload.id}`, payload)
             .then(res => commit('UPDATE_CASE', res.data))
             .catch(err => console.log(err))
     }

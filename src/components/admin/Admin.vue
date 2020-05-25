@@ -4,7 +4,7 @@
             <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Covued-22</a>
             <ul class="navbar-nav">
                 <li class="nav-item text-nowrap">
-                <a class="nav-link sign-out px-3" href="#">Sign out</a>
+                <a class="nav-link sign-out px-3" @click="logout">Sign out</a>
                 </li>
             </ul>
         </nav>
@@ -40,6 +40,11 @@ export default {
     components: {
         Barangays,
         Cases
+    },
+    methods: {
+        logout() {
+            return this.$store.dispatch('logout');
+        }
     },
     data() {
         return {

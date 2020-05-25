@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+import axiosAuth from '@/axios-auth'
+
 const state = {
     barangays: []
 }
@@ -38,20 +40,23 @@ const actions = {
             .catch(err => console.log(err))
     },
     addBarangay({commit}, payload){
-        axios.post('/barangays', payload)
+        axiosAuth.post('/barangays', payload)
             .then(res => commit('ADD_BARANGAY', res.data))
             .catch(err => console.log(err))
     },
     deleteBarangay: ({commit}, id) => {
         console.log(id)
-        axios.delete('/barangays/' + id)
+        axiosAuth.delete('/barangays/' + id)
             .then(res => commit('DELETE_BARANGAY', res.data))
             .catch(err => console.log(err))
     },
     updateBarangay: ({commit}, payload) => {
         console.log(payload);
-        axios.put(`/barangays/${payload.id}`, payload)
-            .then(res => commit('UPDATE_BARANGAYS', res.data))
+        axiosAuth.put(`/barangays/${payload.id}`, payload)
+            .then(res => {
+                commit('UPDATE_BARANGAYS', res.data)
+            })
+            .catch(err => console.log(err))
     }
 }
 
