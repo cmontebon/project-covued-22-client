@@ -12,46 +12,51 @@ const getters = {
 
 const mutations = {
     'SET_CASES': (state, payload) => {
-        state.barangays = payload.data
+        state.cases = payload.data
     },
-    'ADD_BARANGAY': (state, payload) => {
-        state.barangays.push(payload.data)
+    'ADD_CASE': (state, payload) => {
+        state.cases.push(payload)
     },
-    'DELETE_BARANGAY': (state, payload) => {
-        const brgy = state.barangays.find(element => element.id == payload.data.id)
-        state.barangays.splice(state.barangays.indexOf(brgy), 1)
+    'DELETE_CASE': (state, payload) => {
+        const _case = state.cases.find(element => element.id == payload.data.id)
+        state.cases.splice(state.cases.indexOf(_case), 1)
     },
-    'UPDATE_BARANGAYS': (state, payload) => {
-        state.barangays = state.barangays.map(brgy => {
-            if (brgy.id === payload.data.id) {
-                return Object.assign({}, brgy, payload.data)
+    'UPDATE_CASE': (state, payload) => {
+        state.cases = state.cases.map(_case => {
+            if (_case.id === payload.data.id) {
+                return Object.assign({}, _case, payload.data)
             }
-            return brgy
+            return _case
         })
     }
 }
 
 const actions = {
     fetchCases: ({commit}) => {
+        console.log('hello')
         axios.get('/cases')
             .then(res => commit('SET_CASES', res.data))
             .catch(err => console.log(err))
     },
-    addBarangay({commit}, payload){
-        axios.post('/barangays', payload)
-            .then(res => commit('ADD_BARANGAY', res.data))
+    addCase({commit, rootGetters}, payload){
+        axios.post('/cases', payload)
+            .then(res => {
+                const { data } = res.data
+                data.barangay = rootGetters.barangays.find(b => b.id === data.brgy_id)
+
+                commit('ADD_CASE', data)
+            })
             .catch(err => console.log(err))
     },
-    deleteBarangay: ({commit}, id) => {
-        console.log(id)
-        axios.delete('/barangays/' + id)
-            .then(res => commit('DELETE_BARANGAY', res.data))
+    deleteCase: ({commit}, id) => {
+        axios.delete(`/cases/${id}`)
+            .then(res => commit('DELETE_CASE', res.data))
             .catch(err => console.log(err))
     },
-    updateBarangay: ({commit}, payload) => {
-        console.log(payload);
-        axios.put(`/barangays/${payload.id}`, payload)
-            .then(res => commit('UPDATE_BARANGAYS', res.data))
+    updateCase: ({commit}, payload) => {
+        axios.put(`/cases/${payload.id}`, payload)
+            .then(res => commit('UPDATE_CASE', res.data))
+            .catch(err => console.log(err))
     }
 }
 
