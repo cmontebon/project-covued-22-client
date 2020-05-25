@@ -67,7 +67,9 @@ export default {
 
             this.resetForm();
         },
-        edit(brgy) {
+        edit(brgy) {return {
+      componentLoaded: false,
+    };
             this.isEdited = true
             this.formData.id = brgy.id
             this.formData.name = brgy.name

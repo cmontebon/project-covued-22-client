@@ -24,65 +24,38 @@ export default {
   computed:{
     newCenter() {
       return this.center ? this.center : this.defaults.center
+    },
+    cases() {
+      return this.$store.getters.cases
     }
   },
+  created() {
+    this.$store.dispatch('fetchCases').then(() => {
+       this.initMap()
+    });
+   
+  },
   mounted() {
-    this.$refs.mapRef.$mapPromise.then((map) => {
+    
+  },
+  methods: {
+    async initMap(){
+      this.$refs.mapRef.$mapPromise.then((map) => {
         var self = this;
         let latlon = new google.maps.MVCArray();
 
-        var response = {
-            "success": true,
-            "data": [
-                {
-                "id": 1,
-                "age": 58,
-                "classification": "PUI",
-                "brgy_id": 1,
-                "created_at": "2020-05-17 21:10:49",
-                "updated_at": "2020-05-17 21:10:49",
-                "barangay": {
-                    "id": 1,
-                    "name": "Nazareth",
-                    "lat_long": "8.4710803,124.6461613",
-                    "created_at": "2020-05-17 21:09:28",
-                    "updated_at": "2020-05-17 22:24:02"
-                }
-                },
-                {
-                "id": 3,
-                "age": 69,
-                "classification": "PUM",
-                "brgy_id": 1,
-                "created_at": "2020-05-17 21:32:50",
-                "updated_at": "2020-05-17 22:06:24",
-                "barangay": {
-                    "id": 1,
-                    "name": "Nazareth",
-                    "lat_long": "8.4710803,124.6461613",
-                    "created_at": "2020-05-17 21:09:28",
-                    "updated_at": "2020-05-17 22:24:02"
-                }
-                }
-            ],
-            "message": "Covid cases retrieved successfuly."
-            }
+          this.cases.forEach(function(_case) {
+              let coord = _case.barangay.lat_long.split(',')
+              latlon.push(new google.maps.LatLng(coord[0], coord[1]));
+          });
 
-        response.data.forEach(function(_case) {
-            let coord = _case.barangay.lat_long.split(',')
-            console.log(coord);
-            latlon.push(new google.maps.LatLng(coord[0], coord[1]));
-        });
-
-        let x = new google.maps.visualization.HeatmapLayer({
-            data: latlon,
-            map: self.$refs.mapRef.$mapObject,
-            radius: 20,
-        });   
-    })
-  },
-  methods: {
-    
+          let x = new google.maps.visualization.HeatmapLayer({
+              data: latlon,
+              map: self.$refs.mapRef.$mapObject,
+              radius: 20,
+          });   
+      })
+    }
   }
 };
 </script>

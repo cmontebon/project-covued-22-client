@@ -1,7 +1,7 @@
 <template>
     <div>
         <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-            <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Covued-22</a>
+            <router-link class="navbar-brand col-sm-3 col-md-2 mr-0" to="/">COVUED-22</router-link>
             <ul class="navbar-nav">
                 <li class="nav-item text-nowrap">
                 <a class="nav-link sign-out px-3" @click="logout">Sign out</a>

@@ -34,7 +34,6 @@ const mutations = {
 
 const actions = {
     fetchCases: ({commit}) => {
-        console.log('hello')
         axios.get('/cases')
             .then(res => commit('SET_CASES', res.data))
             .catch(err => console.log(err))

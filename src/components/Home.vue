@@ -2,16 +2,16 @@
     <div class="main-wrapper">
         <div class="sidebar">
             <div>
-                <div class="logo">Covid-22</div>
+                <div class="logo"><router-link to="/login">COVUED-22</router-link></div>
                 <div class="search">
-                    <input type="text" placeholder="Search Barangay">
+                    <input type="text" placeholder="Search Barangay" v-model="search">
                 </div>
             </div>
-            <ul class="list-items" >
-                <li v-for="brgy in barangays" :key="brgy.id"><a @click="center = transformCoordinates(brgy.lat_long)">{{ brgy.name }}</a></li>
+            <ul class="list-items" v-if="barangays">
+                <li v-for="brgy in filteredBrgy" :key="brgy.id"><a @click="center = transformCoordinates(brgy.lat_long)">{{ brgy.name }}</a></li>
             </ul>
         </div>
-        <GoogleMap :center="center" />
+        <GoogleMap :center="center" v-if="$store.getters.cases"/>
     </div>
 </template>
 
@@ -26,23 +26,18 @@ export default {
   data() {
       return {
           center: null,
-          barangays: [
-            {
-            "id": 1,
-            "name": "Nazareth",
-            "lat_long": "8.4710803,124.6461613",
-            "created_at": "2020-05-17 21:09:28",
-            "updated_at": "2020-05-17 22:24:02"
-            },
-            {
-            "id": 2,
-            "name": "Camaman-an",
-            "lat_long": "8.4611224,124.6519473",
-            "created_at": "2020-05-17 22:25:32",
-            "updated_at": "2020-05-17 22:25:32"
-            }
-        ]
+          componentLoaded: false,
+          search: ''
       }
+  },
+  computed: {
+        barangays() {
+            if(! this.componentLoaded) return null;
+            return this.$store.getters.barangays
+        },
+        filteredBrgy() {
+        return this.barangays.filter(brgy => brgy.name.toLowerCase().includes(this.search.toLowerCase()))
+    }
   },
   methods: {
     transformCoordinates(coord) {
@@ -54,7 +49,11 @@ export default {
     }
   },
   created() {
-        this.transformCoordinates(this.barangays[0].lat_long)
+      this.$store.dispatch('fetchBarangays')
+      console.log('Barangays', this.barangays)
+  },
+  mounted() {
+      this.componentLoaded = true;
   }
 }
 </script>
