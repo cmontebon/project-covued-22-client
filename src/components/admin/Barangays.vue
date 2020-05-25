@@ -60,7 +60,6 @@ export default {
         async submit() {
             if (this.isEdited) {
                await this.$store.dispatch('updateBarangay', this.formData)
-                console.log(this.formData);
             } else {
                await this.$store.dispatch('addBarangay', this.formData)
             }

@@ -50,7 +50,6 @@ export default {
   },
   created() {
       this.$store.dispatch('fetchBarangays')
-      console.log('Barangays', this.barangays)
   },
   mounted() {
       this.componentLoaded = true;

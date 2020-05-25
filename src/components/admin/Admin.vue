@@ -50,9 +50,6 @@ export default {
         return {
             activeComponent: 'Cases'
         }
-    },
-    created() {
-        console.log(this.$route.params.component)
     }
 }
 </script>

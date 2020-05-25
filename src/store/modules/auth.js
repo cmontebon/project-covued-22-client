@@ -16,7 +16,6 @@ const getters = {
 
 const mutations = {
     'AUTH_USER': (state, token) => {
-        console.log('AUTH_USER', token)
         state.idToken = token
     },
     'LOG_OUT': state => {
@@ -29,7 +28,6 @@ const actions = {
         axios.post('/login', payload)
             .then(res => {
                 const { token } = res.data.success
-                console.log(token);
                 commit('AUTH_USER', token)
                 localStorage.setItem('token', token)
                 router.replace('/admin')
