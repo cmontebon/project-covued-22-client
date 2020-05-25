@@ -4,14 +4,15 @@
             <div class="form-row">
                 <div class="form-group col-md-5">
                     <label>Barangay</label>
-                    <input type="text" class="form-control">
+                    <input type="text" class="form-control" v-model="formData.name">
                 </div>
                 <div class="form-group col-md-5">
                     <label>Location</label>
-                    <input type="text" class="form-control" placeholder="e.g 8.4710803,124.6461613">
+                    <input type="text" class="form-control" v-model="formData.lat_long" placeholder="e.g 8.4710803,124.6461613">
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary submit">Save</button>
+                    <button :disabled="validateForm" type="submit" class="btn btn-primary submit mr-2" @click="submit">Save</button>
+                    <button v-if="isEdited" type="submit" class="btn btn-default submit" @click="resetForm">Cancel</button>
                 </div>
             </div>
 
@@ -20,27 +21,19 @@
                 <table class="table table-striped table-sm">
                 <thead>
                     <tr>
-                    <th>#</th>
-                    <th>Header</th>
-                    <th>Header</th>
-                    <th>Header</th>
-                    <th>Header</th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                    <td>1,001</td>
-                    <td>Lorem</td>
-                    <td>ipsum</td>
-                    <td>dolor</td>
-                    <td>sit</td>
-                    </tr>
-                    <tr>
-                    <td>1,002</td>
-                    <td>amet</td>
-                    <td>consectetur</td>
-                    <td>adipiscing</td>
-                    <td>elit</td>
+                    <tr v-for="brgy in barangays" :key="brgy.id">
+                        <td>{{ brgy.id }}</td>
+                        <td>{{ brgy.name }}</td>
+                        <td>
+                            <button type="button" class="btn btn-link" @click="edit(brgy)">Edit</button>
+                            <button type="button" class="btn btn-link" @click="remove(brgy.id)">Delete</button>
+                        </td>
                     </tr>
                 </tbody>
                 </table>
@@ -49,6 +42,61 @@
     </div>
 </template>
 
+<script>
+export default {
+    name: 'Barangays',
+    data() {
+        return {
+            formData: {
+                id: '',
+                name: '',
+                lat_long: ''
+            },
+            oldFormData: {},
+            isEdited: false
+        }
+    },
+    methods: {
+        async submit() {
+            if (this.isEdited) {
+                await this.$store.dispatch('updateBarangay', this.formData)  
+            } else {
+                await this.$store.dispatch('addBarangay', this.formData) 
+            }
+            this.resetForm();   
+        },
+        edit(brgy) {
+            this.isEdited = true
+            this.formData.id = brgy.id
+            this.formData.name = brgy.name
+            this.formData.lat_long = brgy.lat_long
+            this.oldFormData = this.formData
+        },
+        remove(id) {
+            this.$store.dispatch('deleteBarangay', id)
+        },
+        resetForm() {
+            this.isEdited = false
+            this.formData.name = ''
+            this.formData.lat_long = ''
+            this.formData.id = ''
+            this.oldFormData = {}
+        },
+        
+    },
+    computed: {
+        barangays() {
+            return this.$store.getters.barangays
+        },
+        validateForm() {
+            return this.formData.name && this.formData.lat_long ? false : true
+        }
+    },
+    created() {
+       this.$store.dispatch('fetchBarangays')
+    }
+}
+</script>
 
 <style scoped>
     .submit {

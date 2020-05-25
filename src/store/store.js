@@ -3,9 +3,13 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+// modules
+import barangays from './modules/barangays' 
+import cases from './modules/cases' 
+
 export default new Vuex.Store({
-    state: {},
-    mutations: {},
-    actions: {},
-    getters: {},
+    modules: {
+        barangays,
+        cases
+    }
 })

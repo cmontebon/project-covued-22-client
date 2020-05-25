@@ -1,8 +1,14 @@
 import Vue from 'vue'
 import App from './App.vue'
 import * as VueGoogleMaps from "vue2-google-maps"
+import axios from 'axios'
 
 Vue.config.productionTip = false
+
+axios.defaults.baseURL = process.env.VUE_APP_API_BASEURL
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+//axios.defaults.headers.common['Authorization'] = 'fasfdsa'
+axios.defaults.headers.get['Accepts'] = 'application/json'
 
 import router from './routes'
 import store from './store/store'
